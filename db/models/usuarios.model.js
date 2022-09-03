@@ -18,6 +18,10 @@ const UserSchema = {
     type: DataTypes.STRING,
     unique: true,
   },
+  Telefono: {
+    type: DataTypes.NUMERIC,
+    unique: true,
+  },
   Contraseña: {
     allowNull: false,
     type: DataTypes.STRING,
