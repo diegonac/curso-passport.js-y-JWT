@@ -21,6 +21,10 @@ const ProductSchema = {
     allowNull: false,
     type: DataTypes.INTEGER,
   },
+  Color: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
 };
 
 class Product extends Model {
