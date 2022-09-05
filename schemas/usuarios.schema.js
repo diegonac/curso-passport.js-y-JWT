@@ -1,10 +1,8 @@
 import Joi from "joi";
 
 const id = Joi.string().min(2).max(50);
-const Nombres = Joi.string().min(3).max(50);
 const Email = Joi.string().min(2);
 const Contraseña = Joi.string();
-const Telefono = Joi.number();
 
 const buscarUsuarioSchema = Joi.object({
   id: id.required(),

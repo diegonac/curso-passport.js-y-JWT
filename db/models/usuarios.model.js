@@ -9,17 +9,9 @@ const UserSchema = {
     type: DataTypes.STRING,
     unique: true,
   },
-  Nombres: {
-    allowNull: false,
-    type: DataTypes.STRING,
-  },
   Email: {
     allowNull: false,
     type: DataTypes.STRING,
-    unique: true,
-  },
-  Telefono: {
-    type: DataTypes.NUMERIC,
     unique: true,
   },
   Contraseña: {
