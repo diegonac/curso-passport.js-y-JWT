@@ -10,18 +10,14 @@ const buscarUsuarioSchema = Joi.object({
 
 const crearUsuarioSchema = Joi.object({
   id: id.required(),
-  Nombres: Nombres.required(),
   Email: Email.required(),
   Contraseña: Contraseña.required(),
-  Telefono: Telefono,
 });
 
 const modificarUsuarioSchema = Joi.object({
   id: id,
-  Nombres: Nombres,
   Email: Email,
   Contraseña: Contraseña,
-  Telefono: Telefono,
 });
 
 export { buscarUsuarioSchema, crearUsuarioSchema, modificarUsuarioSchema };

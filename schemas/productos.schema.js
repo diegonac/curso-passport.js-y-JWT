@@ -3,7 +3,7 @@ import Joi from "joi";
 const id = Joi.number().integer();
 const Nombre = Joi.string().min(3).max(30);
 const Precio = Joi.number().integer().min(1);
-const Color = JOI.string();
+const Color = Joi.string();
 
 const buscarProductoSchema = Joi.object({
   id: id.required(),

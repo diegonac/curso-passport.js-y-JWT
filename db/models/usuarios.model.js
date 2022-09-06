@@ -1,6 +1,6 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 
-const USER_TABLE = "users";
+const USER_TABLE = "usuarios";
 
 const UserSchema = {
   id: {

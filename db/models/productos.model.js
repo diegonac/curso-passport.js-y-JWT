@@ -1,7 +1,5 @@
-// Importamos lo siguiente:
 import { Model, DataTypes, Sequelize } from "sequelize";
 
-// Creamos una variable que va a guardar el nombre de la tabla que creará sequelize por nosotros:
 const PRODUCT_TABLE = "productos";
 
 const ProductSchema = {
