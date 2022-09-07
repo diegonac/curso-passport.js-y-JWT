@@ -7,7 +7,11 @@ class usuariosService {
   };
 
   async buscar() {
-    const res = await models.User.findAll();
+
+    // Agregamos el include con los alias:
+    const res = await models.User.findAll({
+      include: ["cliente"],
+    });
 		return res;
   };
 

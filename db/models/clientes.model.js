@@ -46,12 +46,8 @@ const ClientSchema = {
 };
 
 class Client extends Model {
-  // Aquí vamos a agregar la relación:
-  // Como parámetro le pasamos models que contiene los modelos
   static associate(models) {
-    // Le decimos que clientes va a tener una relación 1 y 1
     this.belongsTo(models.User, {as: "usuario"});
-    // as es un alias
   };
   static config(sequelize) {
     return {

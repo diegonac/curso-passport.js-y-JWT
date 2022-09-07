@@ -7,8 +7,9 @@ function setupModels (sequelize) {
   Product.init(ProductSchema, Product.config(sequelize));
   Client.init(ClientSchema, Client.config(sequelize));
 
-  // Luego de inicializarlos le decimos que Client tiene asociaciones
-  // y que debemos pasarle sequelize que contiene los modelos (User, Product, etc)
+  // Agregamos la asociación de User:
+  User.associate(sequelize.models);
+
   Client.associate(sequelize.models);
 };
 
