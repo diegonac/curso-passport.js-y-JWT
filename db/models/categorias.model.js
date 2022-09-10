@@ -1,6 +1,6 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 
-const CATEGORY_TABLE = "categorías";
+const CATEGORY_TABLE = "categorias";
 
 const CategorySchema = {
   id: {
@@ -21,8 +21,15 @@ const CategorySchema = {
 };
 
 class Category extends Model {
-  static associate() {
-
+  static associate(models) {
+    // Le digo que una categoría puede relacionarse con muchos productos:
+    this.hasMany(models.Product, {
+      // Le damos un alias:
+      as: "productos",
+       // Y debemos agregar la foreign key para que sepa dónde debe resolver
+      // esa relación:
+      foreignKey: "categoriaId",
+});
   };
   static config(sequelize) {
     return {

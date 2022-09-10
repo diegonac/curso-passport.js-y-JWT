@@ -9,10 +9,12 @@ function setupModels (sequelize) {
   Client.init(ClientSchema, Client.config(sequelize));
   Category.init(CategorySchema, Category.config(sequelize));
 
-  // Agregamos la asociación de User:
   User.associate(sequelize.models);
-
   Client.associate(sequelize.models);
+
+  // Agregamos la asociaciones:
+  Category.associate(sequelize.models);
+  Product.associate(sequelize.models);
 };
 
 export default setupModels;

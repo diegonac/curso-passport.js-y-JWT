@@ -22,10 +22,7 @@ const UserSchema = {
 };
 
 class User extends Model {
-  // Vamos a agregar un asociación:
   static associate(models) {
-    // Como en el model de clientes ya aplicamos this.belongsTo()
-    // aquí aplicaremos this.hasOne():
     this.hasOne(models.Client, {
       as: "cliente",
       foreignKey: "usuarioId",

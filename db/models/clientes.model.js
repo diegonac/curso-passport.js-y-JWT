@@ -1,6 +1,5 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 
-// Importamos el nombre de la tabla con la que se va a relacionar:
 import { USER_TABLE } from "./usuarios.model.js";
 
 const CLIENT_TABLE = "clientes";
@@ -25,23 +24,17 @@ const ClientSchema = {
     type: DataTypes.NUMERIC,
     unique: true,
   },
-  // Debemos darle un identificador de la relación
-  // Como clientes va a contener la relación, podemos poner el
-  // id que ocupa su contraparte en la tabla de usuarios:
-  // Esto vendría a ser una foreing key (clave externa)
   usuarioId: {
     field: "usuario_id",
     allowNull: false,
     type: DataTypes.STRING,
     unique: true,
-    // Especifiquemos la foreing key:
     references: {
-      model: USER_TABLE, // Acá le decimos con quién va a tener la relación
-      key: "id", // Acá le decimos con que columna se va a relacionar de la tabla user
+      model: USER_TABLE,
+      key: "id",
     },
-    // Establecemos que sucede en caso de que el id de la otra tabla se modifique:
-    onUpdate: "CASCADE", // Así le decimos que actualice el id en la tabla clientes también
-    onDelete: "SET NULL", // En caso de que se borre establece null como valor
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
   },
 };
 
