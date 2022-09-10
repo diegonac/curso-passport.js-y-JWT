@@ -7,12 +7,20 @@ class productosService {
   };
 
   async buscar() {
-    const res = await models.Product.findAll();
+    // Al hacer un get de todos los productos, le damos
+    // que incluya la información de la categoría:
+    const res = await models.Product.findAll({
+      include: ["categoria"],
+    });
 		return res;
   };
 
   async buscarId(id) {
-    const product = await models.Product.findByPk(id);
+    // Al hacer un get de un producto específico, le damos
+    // que incluya la información de la categoría:
+    const product = await models.Product.findByPk(id, {
+      include: ["categoria"],
+    });
 		if (!product) {
 			throw boom.notFound("El producto no existe");
 		};

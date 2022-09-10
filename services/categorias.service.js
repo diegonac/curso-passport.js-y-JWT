@@ -12,7 +12,11 @@ class categoriasService {
   };
 
   async buscarId(id) {
-    const category = await models.Category.findByPk(id);
+    // // Al hacer un get de una categoría específica, le damos
+    // que incluya la información de los productos que contiene:
+    const category = await models.Category.findByPk(id, {
+      include: ["productos"],
+    });
 		if (!category) {
 			throw boom.notFound("La categoría no existe");
 		};
@@ -40,7 +44,7 @@ class categoriasService {
 
   async eliminar(id) {
     const category = await this.buscarId(id);
-		const nombre = product["Nombre"];
+		const nombre = category["Nombre"];
     await category.destroy();
 		return {
       id,

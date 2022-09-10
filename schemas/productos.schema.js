@@ -4,6 +4,7 @@ const id = Joi.number().integer();
 const Nombre = Joi.string().min(3).max(30);
 const Precio = Joi.number().integer().min(1);
 const Color = Joi.string();
+const categoriaId = Joi.string();
 
 const buscarProductoSchema = Joi.object({
   id: id.required(),
@@ -14,6 +15,7 @@ const crearProductoSchema = Joi.object({
   Nombre: Nombre.required(),
   Precio: Precio.required(),
   Color: Color.required(),
+  categoriaId: categoriaId.required(),
 });
 
 const modificarProductoSchema = Joi.object({
