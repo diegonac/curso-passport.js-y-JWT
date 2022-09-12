@@ -2,6 +2,7 @@ import productosRouter from "./productos.router.js";
 import usuariosRouter from "./usuarios.router.js";
 import clientesRouter from "./clientes.router.js";
 import categoriasRouter from "./categorias.router.js";
+import ordenesRouter from "./ordenes.router.js";
 import express from "express";
 
 function routerApi (expressApp) {
@@ -11,6 +12,7 @@ function routerApi (expressApp) {
   router.use("/usuarios", usuariosRouter);
   router.use("/clientes", clientesRouter);
   router.use("/categorias", categoriasRouter);
+  router.use("/ordenes", ordenesRouter);
 };
 
 export default routerApi;

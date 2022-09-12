@@ -41,6 +41,10 @@ const ClientSchema = {
 class Client extends Model {
   static associate(models) {
     this.belongsTo(models.User, {as: "usuario"});
+    this.hasMany(models.Order, {
+      as: "ordenes",
+      foreignKey: "clienteId",
+    });
   };
   static config(sequelize) {
     return {
