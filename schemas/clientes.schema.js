@@ -3,7 +3,7 @@ import Joi from "joi";
 // Importamos los schemas de usuarios:
 import { crearUsuarioSchema, modificarUsuarioSchema } from "./usuarios.schema.js";
 
-const id = Joi.number().integer();
+const id = Joi.string();
 const Nombre = Joi.string().min(3).max(15);
 const Apellido = Joi.string().min(3).max(15);
 const Telefono = Joi.number().integer();

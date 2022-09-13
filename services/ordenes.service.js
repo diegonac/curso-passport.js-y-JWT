@@ -7,18 +7,15 @@ class ordenesService {
   };
 
   async buscar() {
-    // Como sabemos la tabla clientes tiene asociado a la tabla usuarios
-    // Al hacer un get de la tabla ordenes podemos hacer que nos muestre
-    // la información anidada de la tabla relacionada que en este caso sería
-    // la tabla de "clientes" y a su vez podemos pedir que nos anide también
-    // la tabla que está relacionada con "clientes" que sería la tabla "usuarios":
     const res = await models.Order.findAll({
       include: [{
-        // Le decimos que muestre la tabla asociada a ordenes:
         association: "cliente",
-        // Y ahora que incluya las tablas asociadas a clientes:
         include: ["usuario"],
-      }],
+      },
+      // Le digo que incluya la relación con la tabla productos y la tabla
+      // intermediaria con el alias que pusimos:
+        "items",
+    ],
     });
 		return res;
   };

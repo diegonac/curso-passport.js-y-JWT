@@ -13,7 +13,8 @@ const OrderProductSchema = {
   id: {
     allowNull: false,
     primaryKey: true,
-    type: DataTypes.STRING,
+    autoIncrement: true,
+    type: DataTypes.INTEGER,
     unique: true,
   },
   Cantidad: {

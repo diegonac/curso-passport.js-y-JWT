@@ -57,7 +57,7 @@ router.get("/:id",
     }
   );
 
-	router.patch("/:id/",
+	router.patch("/:id",
     validatorHandler(buscarOrdenSchema, "params"),
     validatorHandler(modificarOrdenSchema, "body"),
     async (req, res, next) => {
