@@ -6,6 +6,10 @@ const Precio = Joi.number().integer().min(1);
 const Color = Joi.string();
 const categoriaId = Joi.string();
 
+// Agregamos el offset y limit:
+const offset = Joi.number().integer();
+const limit = Joi.number().integer();
+
 const buscarProductoSchema = Joi.object({
   id: id.required(),
 });
@@ -25,4 +29,11 @@ const modificarProductoSchema = Joi.object({
   Color: Color,
 });
 
-export { buscarProductoSchema, crearProductoSchema, modificarProductoSchema };
+// Creamos un schema más "queryProductoSchema":
+const queryProductoSchema = Joi.object({
+  offset,
+  limit,
+});
+
+// Agregamos queryProductoSchema a las exportaciones:
+export { buscarProductoSchema, crearProductoSchema, modificarProductoSchema, queryProductoSchema };

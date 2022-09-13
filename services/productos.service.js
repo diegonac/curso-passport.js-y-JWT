@@ -6,18 +6,27 @@ class productosService {
   constructor() {
   };
 
-  async buscar() {
-    // Al hacer un get de todos los productos, le damos
-    // que incluya la información de la categoría:
-    const res = await models.Product.findAll({
+  async buscar(query) {
+    // Vamos a crear una variable con las opciones:
+    const opciones = {
+      // Esta propiedad va a ir siempre:
       include: ["categoria"],
-    });
+    };
+    // Guardamos los querys si es que existen se guardarán
+    // si no hay querys tendrá valor undefined:
+    const { offset, limit } = query;
+    // Preguntamos si hay querys:
+    if (offset && limit) {
+      // Si hay querys agregamos a las opciones los querys:
+      opciones.offset = offset;
+      opciones.limit = limit;
+    };
+    // Y ahora solamente le pasamos al finAll() las opciones:
+    const res = await models.Product.findAll(opciones);
 		return res;
   };
 
   async buscarId(id) {
-    // Al hacer un get de un producto específico, le damos
-    // que incluya la información de la categoría:
     const product = await models.Product.findByPk(id, {
       include: ["categoria"],
     });

@@ -1,14 +1,22 @@
 import express from "express";
 import productosService from "../services/productos.service.js";
 import validatorHandler from "../middlewares/validator.handler.js";
-import { buscarProductoSchema, crearProductoSchema, modificarProductoSchema } from "../schemas/productos.schema.js";
+import { buscarProductoSchema, crearProductoSchema, modificarProductoSchema, queryProductoSchema } from "../schemas/productos.schema.js";
 
 const router = express.Router();
 const service = new productosService();
 
-router.get("/", async (req, res) => {
-	res.json(await service.buscar());
-});
+// Le decimos al get que valide los datos antes de darlos:
+router.get("/",
+  validatorHandler(queryProductoSchema, "query"),
+  async (req, res, next) => {
+    // Le enviamos los query al servicio:
+    try {
+      res.json(await service.buscar(req.query));
+    } catch (error) {
+      next(error);
+    };
+  });
 
 router.get("/:id",
   validatorHandler(buscarProductoSchema, "params"),
