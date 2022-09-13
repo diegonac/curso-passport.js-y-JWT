@@ -21,24 +21,34 @@ const OrderSchema = {
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
   },
+
+  // Agrego la siguiente columna:
+  Total: {
+
+    // Le damos la propiedad de tipo "virtual", esto hace que no se agregue a la tabla
+    // y que solo quede la columna como algo de Node:
+    type: DataTypes.VIRTUAL,
+
+    // Le damos una función para que haga las operaciones:
+
+    get () {
+      if (this.items.length > 0) {
+        return this.items.reduce((total, item) => {
+          return total + (item.Precio * item.OrderProduct.Cantidad);
+        }, 0);
+      };
+      return 0;
+    },
+  },
 };
 
 class Order extends Model {
   static associate (models) {
     this.belongsTo(models.Client, {as: "cliente"});
-
-    // Le decimos con belongsToMany() que los datos de la tabla ordenes
-    // se van a relacionar con muchos datos de la tabla productos
-    // 1er parámetro modelo de la tabla a relacionar
-    // 2do parámetro modelo de la tabla intermediaria:
     this.belongsToMany(models.Product, {
-       // Le damos como alias "items" porque la orden tendrá muchos items:
       as: "items",
-      // through le dice a través de cuál tabla intermediaria se resuelve:
       through: models.OrderProduct,
-      // Le pasamos la primera foreignKey:
       foreignKey: "ordenId",
-      // Le pasamos la segunda foreignKey:
       otherKey: "productoId",
     });
   };
