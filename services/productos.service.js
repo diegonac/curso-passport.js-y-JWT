@@ -1,5 +1,9 @@
 import boom from "@hapi/boom";
 import { sequelize } from "../libs/sequelize.js";
+
+// Importamos los operadores de sequelize:
+import { Op } from "sequelize";
+
 const { models }  = sequelize;
 
 class productosService {
@@ -7,21 +11,58 @@ class productosService {
   };
 
   async buscar(query) {
-    // Vamos a crear una variable con las opciones:
     const opciones = {
-      // Esta propiedad va a ir siempre:
       include: ["categoria"],
+      // Agregamos "where", propiedad que nos permite realizar una acción
+      // si tenemos ciertos parámetros o querys
+      // Lo dejaremos vacío para que sea dinámico en caso de que no se filtren precios:
+      where: {},
     };
-    // Guardamos los querys si es que existen se guardarán
-    // si no hay querys tendrá valor undefined:
     const { offset, limit } = query;
-    // Preguntamos si hay querys:
     if (offset && limit) {
-      // Si hay querys agregamos a las opciones los querys:
       opciones.offset = offset;
       opciones.limit = limit;
     };
-    // Y ahora solamente le pasamos al finAll() las opciones:
+
+    // PRECIO:
+    // Guardamos el precio si nos envían:
+    const { Precio } = query;
+    // Preguntamos si tenemos un precio:
+    if (Precio) {
+      // Agrego el precio a las opciones:
+      opciones.where.Precio = Precio;
+    };
+
+    // RANGO DE PRECIOS:
+    // Guardamos los precios mínimos y máximos:
+    const { precioMin, precioMax } = query;
+    // Preguntamos si tenemos precioMin y precioMax y si precioMax es mayor que precioMin:
+    if ((precioMin && precioMax) && precioMax > precioMin) {
+      // Le decimos que el precio tendrá que ser mayor o igual
+      // que "precioMin" y menor o igual a "precioMax":
+      opciones.where.Precio = {
+        // Le decimos >= "mayor o igual":
+        [Op.gte]: precioMin,
+
+        // Le decimos <= "menor o igual":
+        [Op.lte]: precioMax,
+      };
+    }
+    // En caso de que el precioMax sea menor o igual que el precioMin:
+    else if (precioMax <= precioMin) {
+      throw boom.conflict("El precio máximo debe ser mayor que el precio mínimo");
+    };
+
+    // En caso de que queramos productos que valgan menos de cierto precio:
+    // El cliente solo nos pasará un precioMax:
+    if (precioMax && !precioMin) {
+      opciones.where.Precio = {
+        // Le decimos <= "menor o igual":
+        [Op.lte]: precioMax,
+      };
+    };
+
+
     const res = await models.Product.findAll(opciones);
 		return res;
   };
