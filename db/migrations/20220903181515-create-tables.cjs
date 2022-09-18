@@ -7,6 +7,10 @@ const modelsCategory = import("../models/categorias.model.js");
 const modelsOrder = import("../models/ordenes.model.js");
 const modelsOrderProduct = import("../models/ordenes-productos.model.js");
 
+// Importamos DataTypes:
+const { DataTypes } = require("sequelize");
+
+
 module.exports = {
   up: async (queryInterface) => {
     const { USER_TABLE, UserSchema } = await modelsUser;
