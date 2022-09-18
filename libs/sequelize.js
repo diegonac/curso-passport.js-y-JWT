@@ -3,14 +3,26 @@ import { config } from "../config/config.js";
 
 import setupModels from "../db/models/index.js";
 
-const USER = encodeURIComponent(config.dbUser);
-const PASSWORD = encodeURIComponent(config.dbPassword);
-const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`;
+// Elimino las variables de URI, PASSWORD y USER
 
-const sequelize = new Sequelize(URI, {
+// Creo la variable options:
+const options = {
   dialect: "postgres",
-  logging: true,
-});
+  logging: config.isProd ? false : true,
+};
+
+// Pregunto si estamos en producción:
+if (config.isProd) {
+  options.dialectOptions = {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  };
+};
+
+// Cambio como primer parámetro a URI por config.dbUrl
+// y como segundo parámetro le pasamos options:
+const sequelize = new Sequelize(config.dbUrl, options);
 
 setupModels(sequelize);
 

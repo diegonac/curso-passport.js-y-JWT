@@ -13,17 +13,34 @@ module.exports = {
     const { PRODUCT_TABLE, ProductSchema } = await modelsProduct;
     const { CLIENT_TABLE, ClientSchema } = await modelsClient;
     const { CATEGORY_TABLE, CategorySchema } = await modelsCategory;
-    const { ORDER_TABLE, OrderSchema } = await modelsOrder;
+    // Sacamos el OrderSchema:
+    const { ORDER_TABLE } = await modelsOrder;
     const { ORDER_PRODUCT_TABLE, OrderProductSchema } = await modelsOrderProduct;
-
 
     await queryInterface.createTable(USER_TABLE, UserSchema);
     await queryInterface.createTable(CLIENT_TABLE, ClientSchema);
     await queryInterface.createTable(CATEGORY_TABLE, CategorySchema);
     await queryInterface.createTable(PRODUCT_TABLE, ProductSchema);
-    await queryInterface.createTable(ORDER_TABLE, OrderSchema);
-
-    // Creamos la tabla intermediaria:
+    // Escribimos manualmente el schema de order sacando la columna "Total":
+    await queryInterface.createTable(ORDER_TABLE, {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.STRING,
+        unique: true,
+      },
+      clienteId: {
+        field: "cliente_id",
+        allowNull: false,
+        type: DataTypes.STRING,
+        references: {
+          model: CLIENT_TABLE,
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+    });
     await queryInterface.createTable(ORDER_PRODUCT_TABLE, OrderProductSchema);
   },
 
@@ -35,10 +52,7 @@ module.exports = {
     const { ORDER_TABLE } = await modelsOrder;
     const { ORDER_PRODUCT_TABLE } = await modelsOrderProduct;
 
-    // Damos la opción de eliminar la tabla intermediaria
-    // La ubicamos primera porque depende de las tablas ordenes y productos:
     await queryInterface.dropTable(ORDER_PRODUCT_TABLE);
-
     await queryInterface.dropTable(ORDER_TABLE);
     await queryInterface.dropTable(CLIENT_TABLE);
     await queryInterface.dropTable(USER_TABLE);
