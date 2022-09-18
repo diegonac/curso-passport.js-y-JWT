@@ -23,7 +23,7 @@ const options = {
     }
   }
 };
-expressApp.use(cors());
+expressApp.use(cors(options));
 
 expressApp.get("/", (req, res) => {
   res.send("Bienvenido a mi api rest");
