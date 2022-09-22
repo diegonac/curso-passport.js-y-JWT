@@ -2,6 +2,9 @@ import boom from "@hapi/boom";
 import { sequelize } from "../libs/sequelize.js";
 const { models }  = sequelize;
 
+// Importamos bcrypt:
+import bcrypt from "bcrypt";
+
 class clientesService {
   constructor() {
   };
@@ -22,29 +25,28 @@ class clientesService {
 		return client;
   };
 
+  // Agregamos el hash en la función crear():
   async crear(body) {
-
-    // Primero preguntamos si el body viene con la propiedad "usuario"
-    // para saber si en el post de clientes se va a crear el usuario:
     if (body.usuario) {
-      await models.User.create(body.usuario);
-    };
+      // Creamos el hash con el await:
+      const hash = await bcrypt.hash(body.usuario.Contraseña, 10);
 
-    // En caso de que en el post de clientes NO se cree el usuario y se
-    // vaya a relacionar con uno ya existente DEBEMOS preguntar si el usuario
-    // al cual queremos relacionar con el cliente existe o no:
+      // Modificamos la creación del usuario:
+      await models.User.create({
+        ...body.usuario,
+
+        // Que en la contraseña guarde el hash:
+        Contraseña: hash,
+      });
+    };
     const user = await models.User.findByPk(body["usuarioId"]);
     if (!user) {
       throw boom.notFound("El usuario que desea vincular no existe");
     };
-
-    // Preguntamos si el cliente ya existe o no:
     const client = await models.Client.findByPk(body["id"]);
 		if (client) {
 			throw boom.conflict("El cliente ya existe, seleccione otro id");
 		};
-
-    // Creamos el cliente:
     const newClient = await models.Client.create(body);
 		return newClient;
   };

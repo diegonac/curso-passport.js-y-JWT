@@ -1,8 +1,10 @@
 import express from "express";
 import routerApi from "./routes/index.js";
 import { logErr, errorHandler, boomErrorHandler, ormErrorHandler } from "./middlewares/error.handler.js";
-
 import cors from "cors";
+
+//Importamos el middleware de autorización:
+import checkApiKey from "./middlewares/auth.handler.js";
 
 const expressApp = express();
 const PORT = process.env.PORT || 3000;
@@ -28,6 +30,15 @@ expressApp.use(cors());
 expressApp.get("/", (req, res) => {
   res.send("Bienvenido a mi api rest");
 });
+
+// Para el ejemplo creamos un nuevo endpoint:
+expressApp.get("/nueva-pagina",
+  checkApiKey,
+  (req, res) => {
+    res.send("Nueva página je");
+  }
+);
+
 routerApi(expressApp);
 
 expressApp.use(logErr);
