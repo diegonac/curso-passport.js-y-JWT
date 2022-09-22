@@ -1,8 +1,6 @@
 import boom from "@hapi/boom";
 import { sequelize } from "../libs/sequelize.js";
 const { models }  = sequelize;
-
-// Importamos bcrypt:
 import bcrypt from "bcrypt";
 
 class usuariosService {
@@ -16,6 +14,19 @@ class usuariosService {
 		return res;
   };
 
+  // Creamos la función buscarEmail():
+  async buscarEmail(Email) {
+    // Aplicamos el método findOne():
+    const res = await models.User.findOne({
+      // Le decimos que nos traiga el usuario que tenga el email:
+      // Tener en cuenta: como en la base de datos tenemos escrito "Email"
+      // con la e en mayúscula, debemos escribir exactamente igual tanto
+      // en el parámetro de buscarEmail() como en el where: {}
+      where: { Email },
+    });
+    return res;
+  };
+
   async buscarId(id) {
     const user = await models.User.findByPk(id);
 		if (!user) {
@@ -24,26 +35,16 @@ class usuariosService {
 		return user;
   };
 
-  // Debemos agregar el cambio en la función de crear:
   async crear(body) {
-    // Agregamos el hash:
     const hash = await bcrypt.hash(body.Contraseña, 10);
-
     const user = await models.User.findByPk(body["id"]);
 		if (user) {
 			throw boom.conflict("El usuario ya existe, seleccione otro user");
 		};
-
-    // Al crear lo hacemos de la siguiente manera:
     const newUser = await models.User.create({
       ...body,
       Contraseña: hash,
     });
-
-    // Y antes de rotornar debemos eliminar la contraseña
-    // para que no se muestre el hash en el mensaje de "creado"
-    // Como estamos usando sequelize debemos agregar la propiedad
-    // "dataValues":
     delete newUser.dataValues.Contraseña;
 		return newUser;
   };
