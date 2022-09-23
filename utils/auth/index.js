@@ -1,8 +1,11 @@
-// Exportamos a passport:
 import passport from "passport";
 
-// Importamos "localStrategy":
 import localStrategy from "./strategies/local.strategy.js";
 
-// Comenzamos a definir que estrategias vamos a utilizar:
+// Importamos jwtStrategy:
+import jwtStrategy from "./strategies/jwt.strategy.js";
+
 passport.use(localStrategy);
+
+// Le decimos a passport que lo use:
+passport.use(jwtStrategy);

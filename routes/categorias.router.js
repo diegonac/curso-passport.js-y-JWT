@@ -3,6 +3,9 @@ import categoriasService from "../services/categorias.service.js";
 import validatorHandler from "../middlewares/validator.handler.js";
 import { buscarCategoriaSchema, crearCategoriaSchema, modificarCategoriaSchema } from "../schemas/categorias.schema.js";
 
+// Importamos passport:
+import passport from "passport";
+
 const router = express.Router();
 const service = new categoriasService();
 
@@ -23,7 +26,11 @@ router.get("/:id",
   }
 );
 
+  // Vamos a proteger el siguiente endpoint:
 	router.post("/crear",
+    // Le decimos que se autentique con la strategy jwt:
+    passport.authenticate("jwt", {session: false}),
+
     validatorHandler(crearCategoriaSchema, "body"),
     async (req, res, next) => {
       try {
