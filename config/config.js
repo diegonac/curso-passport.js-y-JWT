@@ -11,9 +11,10 @@ const config = {
 	dbName: process.env.DB_NAME,
 	dbPort: process.env.DB_PORT,
   dbUrl: process.env.DATABASE_URL,
-
-  // Agregamos la variable de entorno de api key:
   apiKey: process.env.API_KEY,
+
+  // Agregamos la variable de entorno de secret:
+  jwtSecret: process.env.JWT_SECRET,
 };
 
 export { config };

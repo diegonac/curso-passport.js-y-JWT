@@ -1,23 +1,36 @@
-// Importamos express:
 import express from "express";
-
-// Importamos passport:
 import passport from "passport";
 
-// Creamos un router:
+// Importamos jwt:
+import jwt from "jsonwebtoken";
+
+// Importamos el environment de secret:
+import { config } from "../config/config.js";
+
 const router = express.Router();
 
-// Creamos un endpoint de post:
 router.post("/login",
-  // Le decimos a passport que estrategias vamos a usar,
-  // Y le decimos que no queremos sesiones:
   passport.authenticate("local", {session: false}),
 
-  // Luego creamos la función asíncrona para el endpoint:
   async (req, res, next) => {
     try {
-      // Damos como respuesta req.user:
-      res.json(req.user);
+      // Guardamos el user:
+      const user = req.user;
+
+      // Creamos un payload:
+      const payload = {
+        // En sub establecemos el id del user:
+        sub: user.id,
+      };
+
+      // Creamos el token:
+      const token = jwt.sign(payload, config.jwtSecret);
+
+      // Enviamos como respuesta lo siguiente:
+      res.json({
+        user,
+        token,
+      });
 
     } catch (error) {
       next(error);
@@ -25,5 +38,4 @@ router.post("/login",
   },
 );
 
-// Exportamos el router:
 export default router;
