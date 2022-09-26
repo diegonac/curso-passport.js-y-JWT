@@ -2,6 +2,7 @@ import express from "express";
 import productosService from "../services/productos.service.js";
 import validatorHandler from "../middlewares/validator.handler.js";
 import { buscarProductoSchema, crearProductoSchema, modificarProductoSchema, queryProductoSchema } from "../schemas/productos.schema.js";
+import passport from "passport";
 
 const router = express.Router();
 const service = new productosService();
@@ -16,7 +17,8 @@ router.get("/",
     } catch (error) {
       next(error);
     };
-  });
+  }
+);
 
 router.get("/:id",
   validatorHandler(buscarProductoSchema, "params"),
@@ -32,6 +34,7 @@ router.get("/:id",
 );
 
 	router.post("/crear",
+    passport.authenticate("jwt", {session: false}),
     validatorHandler(crearProductoSchema, "body"),
     async (req, res, next) => {
       try {
@@ -48,6 +51,7 @@ router.get("/:id",
 );
 
 	router.put("/:id",
+    passport.authenticate("jwt", {session: false}),
     validatorHandler(buscarProductoSchema, "params"),
     validatorHandler(modificarProductoSchema, "body"),
     async (req, res, next) => {
@@ -66,6 +70,7 @@ router.get("/:id",
   );
 
 	router.patch("/:id",
+    passport.authenticate("jwt", {session: false}),
     validatorHandler(buscarProductoSchema, "params"),
     validatorHandler(modificarProductoSchema, "body"),
     async (req, res, next) => {
@@ -84,6 +89,7 @@ router.get("/:id",
   );
 
 	router.delete("/:id",
+    passport.authenticate("jwt", {session: false}),
     validatorHandler(buscarProductoSchema, "params"),
     async (req, res, next) => {
       try {

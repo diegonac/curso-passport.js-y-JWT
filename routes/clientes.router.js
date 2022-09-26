@@ -2,15 +2,20 @@ import express from "express";
 import clientesService from "../services/clientes.service.js";
 import validatorHandler from "../middlewares/validator.handler.js";
 import { buscarClienteSchema, crearClienteSchema, modificarClienteSchema } from "../schemas/clientes.schema.js";
+import passport from "passport";
 
 const router = express.Router();
 const service = new clientesService();
 
-router.get("/", async (req, res) => {
-	res.json(await service.buscar());
-});
+router.get("/",
+  passport.authenticate("jwt", {session: false}),
+  async (req, res) => {
+	  res.json(await service.buscar());
+  }
+);
 
 router.get("/:id",
+  passport.authenticate("jwt", {session: false}),
   validatorHandler(buscarClienteSchema, "params"),
   async (req, res, next) => {
 	  try {
@@ -40,6 +45,7 @@ router.get("/:id",
 );
 
 	router.put("/:id",
+    passport.authenticate("jwt", {session: false}),
     validatorHandler(buscarClienteSchema, "params"),
     validatorHandler(modificarClienteSchema, "body"),
     async (req, res, next) => {
@@ -58,6 +64,7 @@ router.get("/:id",
   );
 
 	router.patch("/:id",
+    passport.authenticate("jwt", {session: false}),
     validatorHandler(buscarClienteSchema, "params"),
     validatorHandler(modificarClienteSchema, "body"),
     async (req, res, next) => {
@@ -76,6 +83,7 @@ router.get("/:id",
   );
 
 	router.delete("/:id",
+    passport.authenticate("jwt", {session: false}),
     validatorHandler(buscarClienteSchema, "params"),
     async (req, res, next) => {
       try {
