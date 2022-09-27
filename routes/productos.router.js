@@ -3,6 +3,7 @@ import productosService from "../services/productos.service.js";
 import validatorHandler from "../middlewares/validator.handler.js";
 import { buscarProductoSchema, crearProductoSchema, modificarProductoSchema, queryProductoSchema } from "../schemas/productos.schema.js";
 import passport from "passport";
+import { checkRole } from "../middlewares/auth.handler.js";
 
 const router = express.Router();
 const service = new productosService();
@@ -35,6 +36,7 @@ router.get("/:id",
 
 	router.post("/crear",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "vendedor"),
     validatorHandler(crearProductoSchema, "body"),
     async (req, res, next) => {
       try {
@@ -52,6 +54,7 @@ router.get("/:id",
 
 	router.put("/:id",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "vendedor"),
     validatorHandler(buscarProductoSchema, "params"),
     validatorHandler(modificarProductoSchema, "body"),
     async (req, res, next) => {
@@ -71,6 +74,7 @@ router.get("/:id",
 
 	router.patch("/:id",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "vendedor"),
     validatorHandler(buscarProductoSchema, "params"),
     validatorHandler(modificarProductoSchema, "body"),
     async (req, res, next) => {
@@ -90,6 +94,7 @@ router.get("/:id",
 
 	router.delete("/:id",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "vendedor"),
     validatorHandler(buscarProductoSchema, "params"),
     async (req, res, next) => {
       try {

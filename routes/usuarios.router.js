@@ -3,12 +3,14 @@ import usuariosService from "../services/usuarios.service.js";
 import validatorHandler from "../middlewares/validator.handler.js";
 import { buscarUsuarioSchema, crearUsuarioSchema, modificarUsuarioSchema } from "../schemas/usuarios.schema.js";
 import passport from "passport";
+import { checkRole } from "../middlewares/auth.handler.js";
 
 const router = express.Router();
 const service = new usuariosService();
 
 router.get("/",
   passport.authenticate("jwt", {session: false}),
+  checkRole("administrador", "vendedor"),
   async (req, res) => {
 	  res.json(await service.buscar());
   }
@@ -16,6 +18,7 @@ router.get("/",
 
 router.get("/:id",
   passport.authenticate("jwt", {session: false}),
+  checkRole("administrador", "vendedor"),
   validatorHandler(buscarUsuarioSchema, "params"),
   async (req, res, next) => {
 	  try {
@@ -46,6 +49,7 @@ router.get("/:id",
 
 	router.put("/:id",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "cliente"),
     validatorHandler(buscarUsuarioSchema, "params"),
     validatorHandler(modificarUsuarioSchema, "body"),
     async (req, res, next) => {
@@ -65,6 +69,7 @@ router.get("/:id",
 
 	router.patch("/:id",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "cliente"),
     validatorHandler(buscarUsuarioSchema, "params"),
     validatorHandler(modificarUsuarioSchema, "body"),
     async (req, res, next) => {
@@ -84,6 +89,7 @@ router.get("/:id",
 
 	router.delete("/:id",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "cliente"),
     validatorHandler(buscarUsuarioSchema, "params"),
     async (req, res, next) => {
       try {

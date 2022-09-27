@@ -53,6 +53,7 @@ router.get("/:id",
 
 	router.put("/:id",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "vendedor"),
     validatorHandler(buscarCategoriaSchema, "params"),
     validatorHandler(modificarCategoriaSchema, "body"),
     async (req, res, next) => {
@@ -72,6 +73,7 @@ router.get("/:id",
 
 	router.patch("/:id",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "vendedor"),
     validatorHandler(buscarCategoriaSchema, "params"),
     validatorHandler(modificarCategoriaSchema, "body"),
     async (req, res, next) => {
@@ -91,6 +93,7 @@ router.get("/:id",
 
 	router.delete("/:id",
     passport.authenticate("jwt", {session: false}),
+    checkRole("administrador", "vendedor"),
     validatorHandler(buscarCategoriaSchema, "params"),
     async (req, res, next) => {
       try {
