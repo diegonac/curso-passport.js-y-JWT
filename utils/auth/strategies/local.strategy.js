@@ -21,8 +21,8 @@ const service = new usuariosService();
 const localStrategy = new Strategy(
   {
     // Aquí podemos elegir como queremos que sea el schema de login:
-    usernameField: "Email",
-    passwordField: "Contraseña",
+    usernameField: "email",
+    passwordField: "contraseña",
   },
   async (email, password, done) => {
     try {
@@ -39,7 +39,7 @@ const localStrategy = new Strategy(
 
       // Si el usuario existe debemos comparar la contraseña con el hash,
       // para ver si es correcta la contraseña ingresada:
-      const isMatch = await bcrypt.compare(password, usuario.Contraseña);
+      const isMatch = await bcrypt.compare(password, usuario.contraseña);
 
       // Si isMatch es false la contraseña ingresada es incorrecta:
       if(!isMatch) {
@@ -48,7 +48,7 @@ const localStrategy = new Strategy(
 
       // Antes de enviar el usuario debemos eliminar la contraseña
       // para que no se vea:
-      delete usuario.dataValues.Contraseña;
+      delete usuario.dataValues.contraseña;
 
       // Finalmente si todo salió bien envíamos done() con los parámetros
       // 1er parámetro null, diciendo que no hay errores

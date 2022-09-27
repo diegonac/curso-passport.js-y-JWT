@@ -4,9 +4,9 @@ import Joi from "joi";
 import { crearUsuarioSchema, modificarUsuarioSchema } from "./usuarios.schema.js";
 
 const id = Joi.string();
-const Nombre = Joi.string().min(3).max(15);
-const Apellido = Joi.string().min(3).max(15);
-const Telefono = Joi.number().integer();
+const nombre = Joi.string().min(3).max(15);
+const apellido = Joi.string().min(3).max(15);
+const telefono = Joi.number().integer();
 const usuarioId = Joi.string();
 
 const buscarClienteSchema = Joi.object({
@@ -15,9 +15,9 @@ const buscarClienteSchema = Joi.object({
 
 const crearClienteSchema = Joi.object({
   id: id.required(),
-  Nombre: Nombre.required(),
-  Apellido: Apellido.required(),
-  Telefono: Telefono.required(),
+  nombre: nombre.required(),
+  apellido: apellido.required(),
+  telefono: telefono.required(),
   usuarioId: usuarioId.required(),
 
   // Agregamos la propiedad "usuario" con el schema de usuarios:
@@ -26,10 +26,10 @@ const crearClienteSchema = Joi.object({
 
 const modificarClienteSchema = Joi.object({
   id: id,
-  Nombre: Nombre,
-  Apellido: Apellido,
-  Telefono: Telefono,
-  usuarioId: usuarioId,
+  nombre,
+  apellido,
+  telefono,
+  usuarioId,
 
   // Agregamos la propiedad "usuario" con el schema de usuarios:
   usuario: modificarUsuarioSchema,

@@ -98,7 +98,7 @@ class productosService {
 
   async eliminar(id) {
     const product = await this.buscarId(id);
-		const nombre = product["Nombre"];
+		const nombre = product["nombre"];
     await product.destroy();
 		return {
       id,

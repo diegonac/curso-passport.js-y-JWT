@@ -32,9 +32,9 @@ const OrderSchema = {
     // Le damos una función para que haga las operaciones:
 
     get () {
-      if (this.items.length > 0) {
+      if (this.items && (this.items.length > 0)) {
         return this.items.reduce((total, item) => {
-          return total + (item.Precio * item.OrderProduct.Cantidad);
+          return total + (item.precio * item.OrderProduct.cantidad);
         }, 0);
       };
       return 0;

@@ -9,16 +9,26 @@ const UserSchema = {
     type: DataTypes.STRING,
     unique: true,
   },
-  Email: {
+  email: {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true,
   },
-  Contraseña: {
+  contraseña: {
     allowNull: false,
     type: DataTypes.STRING,
   },
-
+  rol: {
+    allowNull: false,
+    type: DataTypes.STRING,
+    defaultValue: 'cliente',
+  },
+  creado: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: 'creado',
+    defaultValue: Sequelize.NOW
+  }
 };
 
 class User extends Model {

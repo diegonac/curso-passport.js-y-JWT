@@ -13,16 +13,16 @@ const ProductSchema = {
     type: DataTypes.INTEGER,
     unique: true,
   },
-  Nombre: {
+  nombre: {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true,
   },
-  Precio: {
+  precio: {
     allowNull: false,
     type: DataTypes.INTEGER,
   },
-  Color: {
+  color: {
     allowNull: false,
     type: DataTypes.STRING,
   },

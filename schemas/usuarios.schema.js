@@ -1,8 +1,9 @@
 import Joi from "joi";
 
 const id = Joi.string().min(2).max(50);
-const Email = Joi.string().min(2);
-const Contraseña = Joi.string();
+const email = Joi.string().min(2);
+const contraseña = Joi.string();
+const rol = Joi.string();
 
 const buscarUsuarioSchema = Joi.object({
   id: id.required(),
@@ -10,14 +11,16 @@ const buscarUsuarioSchema = Joi.object({
 
 const crearUsuarioSchema = Joi.object({
   id: id.required(),
-  Email: Email.required(),
-  Contraseña: Contraseña.required(),
+  email: email.required(),
+  contraseña: contraseña.required(),
+  rol: rol.required(),
 });
 
 const modificarUsuarioSchema = Joi.object({
-  id: id,
-  Email: Email,
-  Contraseña: Contraseña,
+  id,
+  email,
+  contraseña,
+  rol,
 });
 
 export { buscarUsuarioSchema, crearUsuarioSchema, modificarUsuarioSchema };

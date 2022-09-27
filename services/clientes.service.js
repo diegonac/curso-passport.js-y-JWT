@@ -29,14 +29,14 @@ class clientesService {
   async crear(body) {
     if (body.usuario) {
       // Creamos el hash con el await:
-      const hash = await bcrypt.hash(body.usuario.Contraseña, 10);
+      const hash = await bcrypt.hash(body.usuario.contraseña, 10);
 
       // Modificamos la creación del usuario:
       await models.User.create({
         ...body.usuario,
 
         // Que en la contraseña guarde el hash:
-        Contraseña: hash,
+        contraseña: hash,
       });
     };
     const user = await models.User.findByPk(body["usuarioId"]);
@@ -63,7 +63,7 @@ class clientesService {
 
   async eliminar(id) {
     const client = await this.buscarId(id);
-		const nombre = client["Nombre"];
+		const nombre = client["nombre"];
     await client.destroy();
 		return {
       id,

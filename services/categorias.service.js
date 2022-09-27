@@ -44,7 +44,7 @@ class categoriasService {
 
   async eliminar(id) {
     const category = await this.buscarId(id);
-		const nombre = category["Nombre"];
+		const nombre = category["nombre"];
     await category.destroy();
 		return {
       id,

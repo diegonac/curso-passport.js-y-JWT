@@ -11,15 +11,15 @@ const ClientSchema = {
     type: DataTypes.STRING,
     unique: true,
   },
-  Nombre: {
+  nombre: {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  Apellido: {
+  apellido: {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  Telefono: {
+  telefono: {
     allowNull: false,
     type: DataTypes.NUMERIC,
     unique: true,

@@ -1,9 +1,9 @@
 import Joi from "joi";
 
 const id = Joi.number().integer();
-const Nombre = Joi.string().min(3).max(30);
-const Precio = Joi.number().integer().min(1);
-const Color = Joi.string();
+const nombre = Joi.string().min(3).max(30);
+const precio = Joi.number().integer().min(1);
+const color = Joi.string();
 const categoriaId = Joi.string();
 const offset = Joi.number().integer();
 const limit = Joi.number().integer();
@@ -18,17 +18,17 @@ const buscarProductoSchema = Joi.object({
 
 const crearProductoSchema = Joi.object({
   id: id.required(),
-  Nombre: Nombre.required(),
-  Precio: Precio.required(),
-  Color: Color.required(),
+  nombre: nombre.required(),
+  precio: precio.required(),
+  color: color.required(),
   categoriaId: categoriaId.required(),
 });
 
 const modificarProductoSchema = Joi.object({
   id: id,
-  Nombre: Nombre,
-  Precio: Precio,
-  Color: Color,
+  nombre,
+  precio,
+  color,
 });
 
 const queryProductoSchema = Joi.object({
@@ -36,7 +36,7 @@ const queryProductoSchema = Joi.object({
   limit,
 
   // Agregamos precio, precioMin y precioMax:
-  Precio,
+  precio,
   precioMin,
 
   // Podemos hacer que precioMax sea requerido si nos envian un precioMin

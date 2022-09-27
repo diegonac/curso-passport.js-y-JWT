@@ -9,12 +9,12 @@ const CategorySchema = {
     type: DataTypes.STRING,
     unique: true,
   },
-  Nombre: {
+  nombre: {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true,
   },
-  Imagen: {
+  imagen: {
     allowNull: false,
     type: DataTypes.STRING,
   },

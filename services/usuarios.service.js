@@ -15,14 +15,14 @@ class usuariosService {
   };
 
   // Creamos la función buscarEmail():
-  async buscarEmail(Email) {
+  async buscarEmail(email) {
     // Aplicamos el método findOne():
     const res = await models.User.findOne({
       // Le decimos que nos traiga el usuario que tenga el email:
       // Tener en cuenta: como en la base de datos tenemos escrito "Email"
       // con la e en mayúscula, debemos escribir exactamente igual tanto
       // en el parámetro de buscarEmail() como en el where: {}
-      where: { Email },
+      where: { email },
     });
     return res;
   };
@@ -36,16 +36,16 @@ class usuariosService {
   };
 
   async crear(body) {
-    const hash = await bcrypt.hash(body.Contraseña, 10);
+    const hash = await bcrypt.hash(body.contraseña, 10);
     const user = await models.User.findByPk(body["id"]);
 		if (user) {
 			throw boom.conflict("El usuario ya existe, seleccione otro user");
 		};
     const newUser = await models.User.create({
       ...body,
-      Contraseña: hash,
+      contraseña: hash,
     });
-    delete newUser.dataValues.Contraseña;
+    delete newUser.dataValues.contraseña;
 		return newUser;
   };
 
@@ -60,7 +60,7 @@ class usuariosService {
 
   async eliminar(id) {
     const user = await this.buscarId(id);
-		const email = user["Email"];
+		const email = user["email"];
     await user.destroy();
 		return {
       id,
