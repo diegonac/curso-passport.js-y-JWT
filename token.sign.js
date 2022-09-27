@@ -10,7 +10,7 @@ const payload = {
   // Establecemos el sub (que es como vamos
   // a identificar al usuario):
   sub: 1, // Ponemos de ejemplo "1"
-
+  rol: "administrador",
   // Valores que podemos poner:
   // scope: determina los permisos que habilita el token
   // role: establece el rol que tiene el usuario

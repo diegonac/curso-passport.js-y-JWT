@@ -2,9 +2,10 @@ import express from "express";
 import categoriasService from "../services/categorias.service.js";
 import validatorHandler from "../middlewares/validator.handler.js";
 import { buscarCategoriaSchema, crearCategoriaSchema, modificarCategoriaSchema } from "../schemas/categorias.schema.js";
-
-// Importamos passport:
 import passport from "passport";
+
+// Importamos checkRole():
+import { checkRole } from "../middlewares/auth.handler.js";
 
 const router = express.Router();
 const service = new categoriasService();
@@ -26,10 +27,14 @@ router.get("/:id",
   }
 );
 
-  // Vamos a proteger el siguiente endpoint:
 	router.post("/crear",
-    // Le decimos que se autentique con la strategy jwt:
     passport.authenticate("jwt", {session: false}),
+
+    // Agregamos en los endpoint que queremos
+    // Agregamos después del passport
+    // Debemos pasarle un array con los roles que tendrán permisos de accionar el endpoint:
+    checkRole("administrador", "vendedor"),
+    // En este caso solo los usuarios con rol de administrador y vendedor podrán crear categorías
 
     validatorHandler(crearCategoriaSchema, "body"),
     async (req, res, next) => {

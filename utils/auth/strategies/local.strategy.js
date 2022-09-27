@@ -34,7 +34,7 @@ const localStrategy = new Strategy(
       if(!usuario) {
         // En las estrategias de autenticación los errores se envían
         // junto a un false como 2do parámetro:
-        done(boom.unauthorized(), false);
+        done(boom.unauthorized("El usuario no existe"), false);
       };
 
       // Si el usuario existe debemos comparar la contraseña con el hash,
@@ -43,7 +43,7 @@ const localStrategy = new Strategy(
 
       // Si isMatch es false la contraseña ingresada es incorrecta:
       if(!isMatch) {
-        done(boom.unauthorized(), false);
+        done(boom.unauthorized("Contraseña incorrecta"), false);
       };
 
       // Antes de enviar el usuario debemos eliminar la contraseña
