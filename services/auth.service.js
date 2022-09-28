@@ -59,7 +59,7 @@ class authService {
     // Verificamos que el usuario exista:
     const user = await service.buscarEmail(email);
     if(!user) {
-      throw boom.notFound("No se encontró un usuario con ese email");
+      throw boom.unauthorized();
     };
 
     // Copiamos el trasnporter del "nodemailer.js":
