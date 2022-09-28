@@ -12,9 +12,12 @@ const config = {
 	dbPort: process.env.DB_PORT,
   dbUrl: process.env.DATABASE_URL,
   apiKey: process.env.API_KEY,
-
-  // Agregamos la variable de entorno de secret:
   jwtSecret: process.env.JWT_SECRET,
+
+   // Agregamos la variable de entorno de ggMail:
+   ggMail: process.env.GGMAIL,
+  // Agregamos la variable de entorno de ggKey:
+  ggKey: process.env.GGKEY,
 };
 
 export { config };
