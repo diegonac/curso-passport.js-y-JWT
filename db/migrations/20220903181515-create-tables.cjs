@@ -6,8 +6,6 @@ const modelsClient = import("../models/clientes.model.js");
 const modelsCategory = import("../models/categorias.model.js");
 const modelsOrder = import("../models/ordenes.model.js");
 const modelsOrderProduct = import("../models/ordenes-productos.model.js");
-
-// Importamos DataTypes:
 const { DataTypes } = require("sequelize");
 
 
@@ -17,7 +15,6 @@ module.exports = {
     const { PRODUCT_TABLE, ProductSchema } = await modelsProduct;
     const { CLIENT_TABLE, ClientSchema } = await modelsClient;
     const { CATEGORY_TABLE, CategorySchema } = await modelsCategory;
-    // Sacamos el OrderSchema:
     const { ORDER_TABLE } = await modelsOrder;
     const { ORDER_PRODUCT_TABLE, OrderProductSchema } = await modelsOrderProduct;
 
@@ -25,12 +22,14 @@ module.exports = {
     await queryInterface.createTable(CLIENT_TABLE, ClientSchema);
     await queryInterface.createTable(CATEGORY_TABLE, CategorySchema);
     await queryInterface.createTable(PRODUCT_TABLE, ProductSchema);
-    // Escribimos manualmente el schema de order sacando la columna "Total":
     await queryInterface.createTable(ORDER_TABLE, {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: DataTypes.STRING,
+        // Agregamos "autoIncrement: true"
+        autoIncrement: true,
+        // Cambiamos el data type a integer:
+        type: DataTypes.INTEGER,
         unique: true,
       },
       clienteId: {

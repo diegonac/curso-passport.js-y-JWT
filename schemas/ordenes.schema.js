@@ -1,15 +1,14 @@
 import Joi from "joi";
 
-const id = Joi.string();
+const id = Joi.number().integer();
 const clienteId = Joi.string();
 
 const buscarOrdenSchema = Joi.object({
   id: id.required(),
 });
 
+// Debemos sacar que el id y el clienteId sean requeridos:
 const crearOrdenSchema = Joi.object({
-  id: id.required(),
-  clienteId: clienteId.required(),
 });
 
 const modificarOrdenSchema = Joi.object({

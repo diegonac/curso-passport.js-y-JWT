@@ -37,7 +37,10 @@ router.get("/:id",
     validatorHandler(crearOrdenSchema, "body"),
     async (req, res, next) => {
       try {
-        const body = req.body;
+        // Creamos un body que contiene el sub del payload
+        // en este caso es el usuarioId:
+        const body = req.user.sub;
+        // Enviamos el body para la creación:
         const orden = await service.crear(body);
         res.status(201).json({
           message: "Creado",
