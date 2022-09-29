@@ -22,10 +22,18 @@ class ordenesService {
   };
 
   async buscarId(id) {
-    const order = await models.Order.findByPk(id);
+    const order = await models.Order.findByPk(id, {
+      include: [{
+        association: "cliente",
+        include: ["usuario"],
+      },
+        "items",
+    ],
+    });
 		if (!order) {
 			throw boom.notFound("La orden no existe");
 		};
+    delete order.dataValues.cliente.dataValues.usuario.dataValues.contraseña;
 		return order;
   };
 

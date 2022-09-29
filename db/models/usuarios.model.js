@@ -18,6 +18,12 @@ const UserSchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
+  // Agregamos la siguiente columna:
+  recoveryToken: {
+    field: "recovery_token",
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
   rol: {
     allowNull: false,
     type: DataTypes.STRING,

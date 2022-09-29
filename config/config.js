@@ -13,11 +13,11 @@ const config = {
   dbUrl: process.env.DATABASE_URL,
   apiKey: process.env.API_KEY,
   jwtSecret: process.env.JWT_SECRET,
-
-   // Agregamos la variable de entorno de ggMail:
-   ggMail: process.env.GGMAIL,
-  // Agregamos la variable de entorno de ggKey:
+  ggMail: process.env.GGMAIL,
   ggKey: process.env.GGKEY,
+
+  // Agregamos la nueva clave secreta:
+  jwtSecretRecovery: process.env.JWT_SECRET_RECOVERY,
 };
 
 export { config };

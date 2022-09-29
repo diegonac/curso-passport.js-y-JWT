@@ -4,6 +4,9 @@ const id = Joi.string().min(2).max(50);
 const email = Joi.string().min(2);
 const contraseña = Joi.string();
 const rol = Joi.string();
+// Agregamos token y nuevaContraseña:
+const token = Joi.string();
+const nuevaContraseña = Joi.string();
 
 const buscarUsuarioSchema = Joi.object({
   id: id.required(),
@@ -21,6 +24,9 @@ const modificarUsuarioSchema = Joi.object({
   email,
   contraseña,
   rol,
+  // Agregamos token y nuevaContraseña:
+  token,
+  nuevaContraseña,
 });
 
 export { buscarUsuarioSchema, crearUsuarioSchema, modificarUsuarioSchema };

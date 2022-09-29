@@ -11,6 +11,10 @@ class usuariosService {
     const res = await models.User.findAll({
       include: ["cliente"],
     });
+    res.map((user) => {
+      delete user.dataValues.contraseña;
+      delete user.dataValues.recoveryToken;
+    });
 		return res;
   };
 
