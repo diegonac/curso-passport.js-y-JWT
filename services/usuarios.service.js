@@ -47,7 +47,9 @@ class usuariosService {
       ...body,
       contraseña: hash,
     });
+    // Eliminamos contraseña y recoveryToken de la respuesta:
     delete newUser.dataValues.contraseña;
+    delete newUser.dataValues.recoveryToken;
 		return newUser;
   };
 
