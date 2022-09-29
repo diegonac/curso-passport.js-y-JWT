@@ -37,6 +37,7 @@ router.get("/:id",
       try {
         const body = req.body;
         const cliente = await service.crear(body);
+        console.log(cliente)
         res.status(201).json({
           message: "Creado",
           cliente,

@@ -1,6 +1,4 @@
 import Joi from "joi";
-
-// Importamos los schemas de usuarios:
 import { crearUsuarioSchema, modificarUsuarioSchema } from "./usuarios.schema.js";
 
 const id = Joi.string();
@@ -18,9 +16,8 @@ const crearClienteSchema = Joi.object({
   nombre: nombre.required(),
   apellido: apellido.required(),
   telefono: telefono.required(),
-  usuarioId: usuarioId.required(),
-
-  // Agregamos la propiedad "usuario" con el schema de usuarios:
+  // Hacemos que usuarioId no sea requerido:
+  usuarioId,
   usuario: crearUsuarioSchema,
 });
 
@@ -30,8 +27,6 @@ const modificarClienteSchema = Joi.object({
   apellido,
   telefono,
   usuarioId,
-
-  // Agregamos la propiedad "usuario" con el schema de usuarios:
   usuario: modificarUsuarioSchema,
 });
 

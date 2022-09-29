@@ -1,8 +1,6 @@
 import boom from "@hapi/boom";
 import { sequelize } from "../libs/sequelize.js";
 const { models }  = sequelize;
-
-// Importamos bcrypt:
 import bcrypt from "bcrypt";
 
 class clientesService {
@@ -10,34 +8,41 @@ class clientesService {
   };
 
   async buscar() {
-
     const res = await models.Client.findAll({
       include: ["usuario"],
+    });
+    // Eliminamos contraseña y recoveryToken:
+    res.map((client) => {
+      delete client.dataValues.usuario.dataValues.contraseña;
+      delete client.dataValues.usuario.dataValues.recoveryToken;
     });
 		return res;
   };
 
   async buscarId(id) {
-    const client = await models.Client.findByPk(id);
+    const client = await models.Client.findByPk(id, {
+      include: ["usuario"],
+    });
 		if (!client) {
 			throw boom.notFound("El cliente no existe");
 		};
+    // Eliminamos contraseña y recoveryToken:
+    delete client.dataValues.usuario.dataValues.contraseña;
+    delete client.dataValues.usuario.dataValues.recoveryToken;
 		return client;
   };
 
-  // Agregamos el hash en la función crear():
   async crear(body) {
     if (body.usuario) {
-      // Creamos el hash con el await:
       const hash = await bcrypt.hash(body.usuario.contraseña, 10);
-
-      // Modificamos la creación del usuario:
       await models.User.create({
         ...body.usuario,
-
-        // Que en la contraseña guarde el hash:
         contraseña: hash,
       });
+      body = {
+        ...body,
+        usuarioId: body.usuario.id,
+      };
     };
     const user = await models.User.findByPk(body["usuarioId"]);
     if (!user) {
@@ -48,7 +53,9 @@ class clientesService {
 			throw boom.conflict("El cliente ya existe, seleccione otro id");
 		};
     const newClient = await models.Client.create(body);
-		return newClient;
+    // Eliminamos la contraseña:
+    if (body.usuario) delete body.usuario.contraseña;
+		return body;
   };
 
   async modificar(id, body) {

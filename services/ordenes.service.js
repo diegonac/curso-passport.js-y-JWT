@@ -15,8 +15,10 @@ class ordenesService {
         "items",
     ],
     });
+    // Eliminamos contraseña y recoveryToken de la respuesta:
     res.map((order) => {
       delete order.dataValues.cliente.dataValues.usuario.dataValues.contraseña;
+      delete order.dataValues.cliente.dataValues.usuario.dataValues.recoveryToken;
     });
 		return res;
   };
@@ -33,7 +35,9 @@ class ordenesService {
 		if (!order) {
 			throw boom.notFound("La orden no existe");
 		};
+    // Eliminamos contraseña y recoveryToken de la respuesta:
     delete order.dataValues.cliente.dataValues.usuario.dataValues.contraseña;
+    delete order.dataValues.cliente.dataValues.usuario.dataValues.recoveryToken;
 		return order;
   };
 
@@ -49,20 +53,16 @@ class ordenesService {
         },
       ],
     });
-    // Para que no se vea la contraseña:
+    // Eliminamos contraseña y recoveryToken de la respuesta:
     orders.map((order) => {
       delete order.dataValues.cliente.dataValues.usuario.dataValues.contraseña;
+      delete order.dataValues.cliente.dataValues.usuario.dataValues.recoveryToken;
     });
     return orders;
   };
 
   async crear(body) {
-    // Debemos buscar el cliente, lo hacemos mediante el método
-    // findOne() que nos traer una fila de la tabla:
     const client = await models.Client.findOne({
-      // Le decimos que en la tabla clientes cuando la columna "usuarioId"
-      // sea igual al body (el body es el sub del payload, osea el usuarioId)
-      // nos traiga esa fila del cliente que coincide con ese usuarioId:
       where: {usuarioId: body}
     });
     if (!client) {
@@ -73,10 +73,7 @@ class ordenesService {
 		if (order) {
 			throw boom.conflict("La orden ya existe, seleccione otro id");
 		};
-    // Si el cliente existe le decimos que cree una nueva orden:
     const newOrder = await models.Order.create({
-      // Dentro de llaves establecemos el "clienteId", como ya tenemos
-      // guardado el cliente en la variable "client":
       clienteId: client.id
     });
 		return newOrder;

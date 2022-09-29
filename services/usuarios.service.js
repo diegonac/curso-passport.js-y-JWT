@@ -11,6 +11,7 @@ class usuariosService {
     const res = await models.User.findAll({
       include: ["cliente"],
     });
+    // Eliminamos contraseña y recoveryToken de la respuesta:
     res.map((user) => {
       delete user.dataValues.contraseña;
       delete user.dataValues.recoveryToken;
@@ -18,14 +19,8 @@ class usuariosService {
 		return res;
   };
 
-  // Creamos la función buscarEmail():
   async buscarEmail(email) {
-    // Aplicamos el método findOne():
     const res = await models.User.findOne({
-      // Le decimos que nos traiga el usuario que tenga el email:
-      // Tener en cuenta: como en la base de datos tenemos escrito "Email"
-      // con la e en mayúscula, debemos escribir exactamente igual tanto
-      // en el parámetro de buscarEmail() como en el where: {}
       where: { email },
     });
     return res;
@@ -36,6 +31,9 @@ class usuariosService {
 		if (!user) {
 			throw boom.notFound("El usuario no existe");
 		};
+    // Eliminamos contraseña y recoveryToken de la respuesta:
+    delete user.dataValues.contraseña;
+    delete user.dataValues.recoveryToken;
 		return user;
   };
 
