@@ -76,7 +76,7 @@ class authService {
   async changePassword(token, nuevaContraseña) {
     try {
       const payload = jwt.verify(token, config.jwtSecretRecovery);
-      const user = await service.buscarId(payload.sub);
+      const user = await service.buscarUsuarioRecovery(payload.sub);
       if(user.recoveryToken !== token) {
         throw boom.unauthorized("Error de token");
       };

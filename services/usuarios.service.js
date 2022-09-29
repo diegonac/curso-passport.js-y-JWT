@@ -11,7 +11,6 @@ class usuariosService {
     const res = await models.User.findAll({
       include: ["cliente"],
     });
-    // Eliminamos contraseña y recoveryToken de la respuesta:
     res.map((user) => {
       delete user.dataValues.contraseña;
       delete user.dataValues.recoveryToken;
@@ -31,9 +30,16 @@ class usuariosService {
 		if (!user) {
 			throw boom.notFound("El usuario no existe");
 		};
-    // Eliminamos contraseña y recoveryToken de la respuesta:
     delete user.dataValues.contraseña;
     delete user.dataValues.recoveryToken;
+		return user;
+  };
+
+  // Creamos la función buscarUsuario:
+  async buscarUsuarioRecovery(id) {
+    const user = await models.User.findByPk(id);
+    // Eliminamos contraseña:
+    delete user.dataValues.contraseña;
 		return user;
   };
 
@@ -47,7 +53,6 @@ class usuariosService {
       ...body,
       contraseña: hash,
     });
-    // Eliminamos contraseña y recoveryToken de la respuesta:
     delete newUser.dataValues.contraseña;
     delete newUser.dataValues.recoveryToken;
 		return newUser;
