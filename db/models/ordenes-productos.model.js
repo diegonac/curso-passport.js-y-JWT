@@ -21,7 +21,6 @@ const OrderProductSchema = {
   ordenId: {
     field: "orden_id",
     allowNull: false,
-    // Cambiamos el data type a integer:
     type: DataTypes.INTEGER,
     references: {
       model: ORDER_TABLE,
@@ -40,6 +39,10 @@ const OrderProductSchema = {
     },
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
+  },
+  precio: {
+    allowNull: true,
+    type: DataTypes.INTEGER,
   },
 };
 

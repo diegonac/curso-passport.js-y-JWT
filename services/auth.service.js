@@ -17,7 +17,6 @@ class authService {
     if(!isMatch) {
       throw boom.unauthorized("Contraseña incorrecta");
     };
-    // Eliminamos contraseña y recoveryToken:
     delete user.dataValues.contraseña;
     delete user.dataValues.recoveryToken;
     return user;
@@ -76,12 +75,12 @@ class authService {
   async changePassword(token, nuevaContraseña) {
     try {
       const payload = jwt.verify(token, config.jwtSecretRecovery);
-      const user = await service.buscarUsuarioRecovery(payload.sub);
+      const user = await service.buscarId(payload.sub);
       if(user.recoveryToken !== token) {
         throw boom.unauthorized("Error de token");
       };
       const hash = await bcrypt.hash(nuevaContraseña, 10);
-      await service.modificar(user.id, {recoveryToken: null, contraseña: hash})
+      await service.modificarPassword(user.id, {recoveryToken: null, contraseña: hash})
       return { message: "Se ha cambiado la contraseña con éxito" };
     } catch (error) {
       throw boom.unauthorized();

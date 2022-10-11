@@ -18,6 +18,7 @@ module.exports = {
     const { ORDER_TABLE } = await modelsOrder;
     const { ORDER_PRODUCT_TABLE, OrderProductSchema } = await modelsOrderProduct;
 
+
     await queryInterface.createTable(USER_TABLE, UserSchema);
     await queryInterface.createTable(CLIENT_TABLE, ClientSchema);
     await queryInterface.createTable(CATEGORY_TABLE, CategorySchema);
@@ -26,9 +27,7 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        // Agregamos "autoIncrement: true"
         autoIncrement: true,
-        // Cambiamos el data type a integer:
         type: DataTypes.INTEGER,
         unique: true,
       },
@@ -43,8 +42,25 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
+      estado: {
+        allowNull: false,
+        defaultValue: "pendiente",
+        type: DataTypes.STRING,
+      },
+      createdAt: {
+        field: "created_at",
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+
+      deletedAt: {
+        field: "deleted_at",
+        allowNull: true,
+        type: DataTypes.DATE,
+      },
     });
     await queryInterface.createTable(ORDER_PRODUCT_TABLE, OrderProductSchema);
+
   },
 
   down: async (queryInterface) => {
@@ -55,12 +71,14 @@ module.exports = {
     const { ORDER_TABLE } = await modelsOrder;
     const { ORDER_PRODUCT_TABLE } = await modelsOrderProduct;
 
+
     await queryInterface.dropTable(ORDER_PRODUCT_TABLE);
     await queryInterface.dropTable(ORDER_TABLE);
     await queryInterface.dropTable(CLIENT_TABLE);
     await queryInterface.dropTable(USER_TABLE);
     await queryInterface.dropTable(PRODUCT_TABLE);
     await queryInterface.dropTable(CATEGORY_TABLE);
+
 
   },
 };

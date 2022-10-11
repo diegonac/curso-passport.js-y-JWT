@@ -29,4 +29,9 @@ const modificarUsuarioSchema = Joi.object({
   nuevaContraseña,
 });
 
-export { buscarUsuarioSchema, crearUsuarioSchema, modificarUsuarioSchema };
+const recuperarUsuarioSchema = Joi.object({
+  email,
+  contraseña,
+});
+
+export { buscarUsuarioSchema, crearUsuarioSchema, modificarUsuarioSchema, recuperarUsuarioSchema };

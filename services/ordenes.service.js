@@ -14,11 +14,20 @@ class ordenesService {
       },
         "items",
     ],
+    paranoid: false,
     });
-    // Eliminamos contraseña y recoveryToken de la respuesta:
     res.map((order) => {
+      if(order.dataValues.estado == "vendido") {
+        order.items.map(product => {
+          product.dataValues.precio = product.dataValues.OrderProduct.dataValues.precio;
+        });
+      };
+
       delete order.dataValues.cliente.dataValues.usuario.dataValues.contraseña;
       delete order.dataValues.cliente.dataValues.usuario.dataValues.recoveryToken;
+    });
+    res.sort((a, b) => {
+      return a.dataValues.id - b.dataValues.id;
     });
 		return res;
   };
@@ -31,11 +40,16 @@ class ordenesService {
       },
         "items",
     ],
+      paranoid: false,
     });
 		if (!order) {
 			throw boom.notFound("La orden no existe");
 		};
-    // Eliminamos contraseña y recoveryToken de la respuesta:
+    if(order.dataValues.estado == "vendido") {
+      order.items.map(product => {
+        product.dataValues.precio = product.dataValues.OrderProduct.dataValues.precio;
+      });
+    };
     delete order.dataValues.cliente.dataValues.usuario.dataValues.contraseña;
     delete order.dataValues.cliente.dataValues.usuario.dataValues.recoveryToken;
 		return order;
@@ -53,7 +67,6 @@ class ordenesService {
         },
       ],
     });
-    // Eliminamos contraseña y recoveryToken de la respuesta:
     orders.map((order) => {
       delete order.dataValues.cliente.dataValues.usuario.dataValues.contraseña;
       delete order.dataValues.cliente.dataValues.usuario.dataValues.recoveryToken;
@@ -65,14 +78,8 @@ class ordenesService {
     const client = await models.Client.findOne({
       where: {usuarioId: body}
     });
-    if (!client) {
-      throw boom.notFound("El cliente que desea vincular no existe");
-    };
+    if (!client) throw boom.notFound("El cliente que desea vincular no existe");
 
-    const order = await models.Order.findByPk(body["id"]);
-		if (order) {
-			throw boom.conflict("La orden ya existe, seleccione otro id");
-		};
     const newOrder = await models.Order.create({
       clienteId: client.id
     });
@@ -81,7 +88,21 @@ class ordenesService {
 
   async modificar(id, body) {
     const order = await this.buscarId(id);
+    if(order.dataValues.estado == "vendido" || order.dataValues.estado == "cancelado") {
+      throw boom.badRequest("La orden no se puede modificar");
+    };
+		const res = await order.update({
+			...order,
+			...body,
+		});
+		return res;
+  };
 
+  async estado(id, body, user) {
+    const order = await this.buscarId(id);
+    if(order.dataValues.estado == "vendido" || order.dataValues.estado == "cancelado") throw boom.conflict();
+    if(order.dataValues.cliente.dataValues.usuario.dataValues.id != user) throw boom.conflict();
+    if(body.estado == "vendido" && !order.items) throw boom.badRequest("La orden no tiene productos");
 		const res = await order.update({
 			...order,
 			...body,
@@ -91,9 +112,12 @@ class ordenesService {
 
   async eliminar(id) {
     const order = await this.buscarId(id);
+    await this.modificar(id, {estado: "cancelado"});
     await order.destroy();
 		return id;
   };
 };
+
+
 
 export default ordenesService;

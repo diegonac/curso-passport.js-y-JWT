@@ -1,7 +1,6 @@
 import boom from "@hapi/boom";
 import { sequelize } from "../libs/sequelize.js";
 const { models }  = sequelize;
-
 class ordenesProductosService {
   constructor() {
   };
@@ -20,6 +19,27 @@ class ordenesProductosService {
   };
 
   async crear(body) {
+    const order = await models.Order.findOne({where: {id: body.ordenId}});
+    if(order.dataValues.estado == "vendido") throw boom.badRequest("La orden ya fue vendida");
+
+    const orderProduct = await models.OrderProduct.findOne({
+      where: {
+        ordenId: body.ordenId,
+        productoId: body.productoId,
+      }
+    });
+
+
+    if(orderProduct && (orderProduct.dataValues.productoId == body.productoId)) {
+      let cantidad = orderProduct.dataValues.cantidad;
+      cantidad += body.cantidad;
+      this.modificar(orderProduct.dataValues.id, {
+        cantidad,
+      });
+      return body;
+    };
+    const product = await models.Product.findOne({where: {id: body.productoId}});
+    body.precio = product.dataValues.precio;
     const newOrderProduct = await models.OrderProduct.create(body);
 		return newOrderProduct;
   };

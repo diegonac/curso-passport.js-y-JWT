@@ -26,13 +26,10 @@ const ProductSchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  // Agregamos la relación con la tabla de categorías:
   categoriaId: {
     field: "categoria_id",
     allowNull: false,
     type: DataTypes.STRING,
-    // Eliminamos la propiedad unique, ya que se va a repetir varias veces
-    // el categoriaId
     references: {
       model: CATEGORY_TABLE,
       key: "id",
@@ -40,10 +37,19 @@ const ProductSchema = {
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
   },
+  updatedAt: {
+    field: "updated_at",
+    allowNull: true,
+    type: DataTypes.DATE,
+  },
+  deletedAt: {
+    field: "delete_at",
+    allowNull: true,
+    type: DataTypes.DATE,
+  },
 };
 
 class Product extends Model {
-  // También podemos asociar desde productos:
   static associate(models) {
     this.belongsTo(models.Category, { as: "categoria" });
   };
@@ -52,7 +58,7 @@ class Product extends Model {
       sequelize,
       tableName: PRODUCT_TABLE,
       modelName: "Product",
-      timestamps: false
+      createdAt: false,
     };
   };
 };

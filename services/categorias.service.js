@@ -7,7 +7,7 @@ class categoriasService {
   };
 
   async buscar() {
-    const res = await models.Category.findAll();
+    const res = await models.Category.findAll({paranoid: false});
 		return res;
   };
 

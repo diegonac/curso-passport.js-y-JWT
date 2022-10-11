@@ -18,16 +18,17 @@ const CategorySchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
+  deletedAt: {
+    field: "deleted_at",
+    allowNull: true,
+    type: DataTypes.DATE,
+  },
 };
 
 class Category extends Model {
   static associate(models) {
-    // Le digo que una categoría puede relacionarse con muchos productos:
     this.hasMany(models.Product, {
-      // Le damos un alias:
       as: "productos",
-       // Y debemos agregar la foreign key para que sepa dónde debe resolver
-      // esa relación:
       foreignKey: "categoriaId",
 });
   };
@@ -36,7 +37,9 @@ class Category extends Model {
       sequelize,
       tableName: CATEGORY_TABLE,
       modelName: "Category",
-      timestamps: false
+      paranoid: true,
+      createdAt: false,
+      updatedAt: false,
     };
   };
 };

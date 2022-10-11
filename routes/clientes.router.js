@@ -10,7 +10,7 @@ const service = new clientesService();
 
 router.get("/",
   passport.authenticate("jwt", {session: false}),
-  checkRole("administrador", "vendedor", "cliente"),
+  checkRole("administrador", "vendedor"),
   async (req, res) => {
 	  res.json(await service.buscar());
   }
@@ -18,7 +18,7 @@ router.get("/",
 
 router.get("/:id",
   passport.authenticate("jwt", {session: false}),
-  checkRole("administrador", "vendedor", "cliente"),
+  checkRole("administrador", "vendedor"),
   validatorHandler(buscarClienteSchema, "params"),
   async (req, res, next) => {
 	  try {
@@ -37,7 +37,6 @@ router.get("/:id",
       try {
         const body = req.body;
         const cliente = await service.crear(body);
-        console.log(cliente)
         res.status(201).json({
           message: "Creado",
           cliente,
@@ -50,7 +49,7 @@ router.get("/:id",
 
 	router.put("/:id",
     passport.authenticate("jwt", {session: false}),
-    checkRole("administrador", "cliente"),
+    checkRole("administrador"),
     validatorHandler(buscarClienteSchema, "params"),
     validatorHandler(modificarClienteSchema, "body"),
     async (req, res, next) => {
@@ -68,29 +67,9 @@ router.get("/:id",
     }
   );
 
-	router.patch("/:id",
-    passport.authenticate("jwt", {session: false}),
-    checkRole("administrador", "cliente"),
-    validatorHandler(buscarClienteSchema, "params"),
-    validatorHandler(modificarClienteSchema, "body"),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params;
-        const body =  req.body;
-        const cliente = await service.modificar(id, body);
-        res.json({
-          message: "Modificado",
-          cliente,
-        });
-      } catch (error) {
-          next(error);
-      };
-    }
-  );
-
 	router.delete("/:id",
     passport.authenticate("jwt", {session: false}),
-    checkRole("administrador", "cliente"),
+    checkRole("administrador"),
     validatorHandler(buscarClienteSchema, "params"),
     async (req, res, next) => {
       try {

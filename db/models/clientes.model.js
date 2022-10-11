@@ -36,6 +36,21 @@ const ClientSchema = {
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
   },
+  createdAt: {
+    field: "created_at",
+    allowNull: false,
+    type: DataTypes.DATE,
+  },
+  updatedAt: {
+    field: "updated_at",
+    allowNull: true,
+    type: DataTypes.DATE,
+  },
+  deletedAt: {
+    field: "deleted_at",
+    allowNull: true,
+    type: DataTypes.DATE,
+  },
 };
 
 class Client extends Model {
@@ -51,7 +66,7 @@ class Client extends Model {
       sequelize,
       tableName: CLIENT_TABLE,
       modelName: "Client",
-      timestamps: false
+      paranoid: true,
     };
   };
 };

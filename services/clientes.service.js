@@ -2,16 +2,16 @@ import boom from "@hapi/boom";
 import { sequelize } from "../libs/sequelize.js";
 const { models }  = sequelize;
 import bcrypt from "bcrypt";
-
+import ordenesService from "./ordenes.service.js";
+const serviceOrder = new ordenesService();
 class clientesService {
   constructor() {
   };
 
   async buscar() {
     const res = await models.Client.findAll({
-      include: ["usuario"],
+      include: ["usuario", "ordenes"],
     });
-    // Eliminamos contraseña y recoveryToken:
     res.map((client) => {
       delete client.dataValues.usuario.dataValues.contraseña;
       delete client.dataValues.usuario.dataValues.recoveryToken;
@@ -21,12 +21,11 @@ class clientesService {
 
   async buscarId(id) {
     const client = await models.Client.findByPk(id, {
-      include: ["usuario"],
+      include: ["usuario", "ordenes"],
     });
 		if (!client) {
 			throw boom.notFound("El cliente no existe");
 		};
-    // Eliminamos contraseña y recoveryToken:
     delete client.dataValues.usuario.dataValues.contraseña;
     delete client.dataValues.usuario.dataValues.recoveryToken;
 		return client;
@@ -53,7 +52,6 @@ class clientesService {
 			throw boom.conflict("El cliente ya existe, seleccione otro id");
 		};
     const newClient = await models.Client.create(body);
-    // Eliminamos la contraseña:
     if (body.usuario) delete body.usuario.contraseña;
 		return body;
   };
@@ -69,8 +67,13 @@ class clientesService {
   };
 
   async eliminar(id) {
-    const client = await this.buscarId(id);
+    let client = await this.buscarId(id);
 		const nombre = client["nombre"];
+    if(client.dataValues.ordenes) {
+      await models.Order.destroy({
+        where: {clienteId: client.dataValues.id}
+      });
+    };
     await client.destroy();
 		return {
       id,

@@ -23,23 +23,34 @@ const OrderSchema = {
     onDelete: "SET NULL",
   },
 
-  // Agrego la siguiente columna:
   Total: {
-
-    // Le damos la propiedad de tipo "virtual", esto hace que no se agregue a la tabla
-    // y que solo quede la columna como algo de Node:
     type: DataTypes.VIRTUAL,
-
-    // Le damos una función para que haga las operaciones:
-
     get () {
       if (this.items && (this.items.length > 0)) {
         return this.items.reduce((total, item) => {
-          return total + (item.precio * item.OrderProduct.cantidad);
+          return total + (item.OrderProduct.precio * item.OrderProduct.cantidad);
         }, 0);
       };
       return 0;
     },
+  },
+
+  estado: {
+    allowNull: false,
+    defaultValue: "pendiente",
+    type: DataTypes.STRING,
+  },
+
+  createdAt: {
+    field: "created_at",
+    allowNull: false,
+    type: DataTypes.DATE,
+  },
+
+  deletedAt: {
+    field: "deleted_at",
+    allowNull: true,
+    type: DataTypes.DATE,
   },
 };
 
@@ -59,7 +70,8 @@ class Order extends Model {
       sequelize,
       tableName: ORDER_TABLE,
       modelName: "Order",
-      timestamps: false,
+      paranoid: true,
+      updatedAt: false,
     };
   };
 };

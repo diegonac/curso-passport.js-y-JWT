@@ -37,10 +37,7 @@ router.get("/:id",
     validatorHandler(crearOrdenSchema, "body"),
     async (req, res, next) => {
       try {
-        // Creamos un body que contiene el sub del payload
-        // en este caso es el usuarioId:
         const body = req.user.sub;
-        // Enviamos el body para la creación:
         const orden = await service.crear(body);
         res.status(201).json({
           message: "Creado",
@@ -54,7 +51,7 @@ router.get("/:id",
 
 	router.put("/:id",
     passport.authenticate("jwt", {session: false}),
-    checkRole("administrador", "cliente"),
+    checkRole("administrador", "vendedor"),
     validatorHandler(buscarOrdenSchema, "params"),
     validatorHandler(modificarOrdenSchema, "body"),
     async (req, res, next) => {
@@ -72,29 +69,11 @@ router.get("/:id",
     }
   );
 
-	router.patch("/:id",
-    passport.authenticate("jwt", {session: false}),
-    checkRole("administrador", "cliente"),
-    validatorHandler(buscarOrdenSchema, "params"),
-    validatorHandler(modificarOrdenSchema, "body"),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params;
-        const body =  req.body;
-        const orden = await service.modificar(id, body);
-        res.json({
-          message: "Modificado",
-          orden,
-        });
-      } catch (error) {
-          next(error);
-      };
-    }
-  );
+
 
 	router.delete("/:id",
     passport.authenticate("jwt", {session: false}),
-    checkRole("administrador", "cliente"),
+    checkRole("administrador"),
     validatorHandler(buscarOrdenSchema, "params"),
     async (req, res, next) => {
       try {
@@ -102,7 +81,7 @@ router.get("/:id",
         const orden = await service.eliminar(id);
         res.json({
           message: "Eliminado",
-          orden,
+          id,
         });
       } catch (error) {
           next(error);

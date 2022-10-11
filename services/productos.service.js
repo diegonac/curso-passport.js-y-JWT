@@ -1,7 +1,8 @@
 import boom from "@hapi/boom";
 import { sequelize } from "../libs/sequelize.js";
+import ordenesProductosService from "./ordenes-productos.service.js";
+const serviceOrderProduct = new ordenesProductosService();
 
-// Importamos los operadores de sequelize:
 import { Op } from "sequelize";
 
 const { models }  = sequelize;
@@ -13,9 +14,6 @@ class productosService {
   async buscar(query) {
     const opciones = {
       include: ["categoria"],
-      // Agregamos "where", propiedad que nos permite realizar una acción
-      // si tenemos ciertos parámetros o querys
-      // Lo dejaremos vacío para que sea dinámico en caso de que no se filtren precios:
       where: {},
     };
     const { offset, limit } = query;
@@ -24,40 +22,22 @@ class productosService {
       opciones.limit = limit;
     };
 
-    // PRECIO:
-    // Guardamos el precio si nos envían:
     const { Precio } = query;
-    // Preguntamos si tenemos un precio:
     if (Precio) {
-      // Agrego el precio a las opciones:
       opciones.where.Precio = Precio;
     };
-
-    // RANGO DE PRECIOS:
-    // Guardamos los precios mínimos y máximos:
     const { precioMin, precioMax } = query;
-    // Preguntamos si tenemos precioMin y precioMax y si precioMax es mayor que precioMin:
     if ((precioMin && precioMax) && precioMax > precioMin) {
-      // Le decimos que el precio tendrá que ser mayor o igual
-      // que "precioMin" y menor o igual a "precioMax":
       opciones.where.Precio = {
-        // Le decimos >= "mayor o igual":
         [Op.gte]: precioMin,
-
-        // Le decimos <= "menor o igual":
         [Op.lte]: precioMax,
       };
     }
-    // En caso de que el precioMax sea menor o igual que el precioMin:
     else if (precioMax <= precioMin) {
       throw boom.conflict("El precio máximo debe ser mayor que el precio mínimo");
     };
-
-    // En caso de que queramos productos que valgan menos de cierto precio:
-    // El cliente solo nos pasará un precioMax:
     if (precioMax && !precioMin) {
       opciones.where.Precio = {
-        // Le decimos <= "menor o igual":
         [Op.lte]: precioMax,
       };
     };
@@ -79,15 +59,29 @@ class productosService {
 
   async crear(body) {
     const product = await models.Product.findByPk(body["id"]);
-		if (product) {
-			throw boom.conflict("El producto ya existe, seleccione otro id");
-		};
+		if (product) throw boom.conflict("El producto ya existe, seleccione otro id");
+    const categoria = await models.Category.findByPk(body.categoriaId);
+    if(!categoria) throw boom.notFound("La categoría no existe");
     const newProduct = await models.Product.create(body);
 		return newProduct;
   };
 
   async modificar(id, body) {
     const product = await this.buscarId(id);
+    const orders = await models.Order.findAll({where: {estado: "pendiente"}});
+    if(body.precio && orders){
+     const promises = orders.map(async order => {
+        const orderProducts = await models.OrderProduct.findAll({where: {productoId: id, ordenId: order.dataValues.id}});
+        const promises = orderProducts.map(async orderProduct => {
+          const id = orderProduct.dataValues.id;
+          await serviceOrderProduct.modificar(id, {
+           precio: body.precio,
+          });
+        });
+        await Promise.all(promises);
+      });
+      await Promise.all(promises);
+    };
 
 		const res = await product.update({
 			...product,
